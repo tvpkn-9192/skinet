@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using Core.Entities;
 using Core.Interfaces;
+using Core.Specifications;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +14,9 @@ public class ProductsController(IGenericRepository<Product> repo) : ControllerBa
 {
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Product>>> GetProducts(string? brand, string? type, string? sort) {
-        return Ok(await repo.ListAllAsync());
+        var spec = new ProdcutSpecification(brand, type, sort);
+        var products = await repo.ListAsync(spec);
+        return Ok(products);
     }    
 
     [HttpGet("{id}")]
@@ -71,14 +74,14 @@ public class ProductsController(IGenericRepository<Product> repo) : ControllerBa
 
     [HttpGet("brands")]
     public async Task<ActionResult<IReadOnlyList<string>>> GetBrands() {
-        //TODO: Implement this method in the repository
-        return Ok();
+        var spec = new BrandListSpecification();
+        return Ok(await repo.ListAsync(spec));
     }
 
     [HttpGet("types")]
     public async Task<ActionResult<IReadOnlyList<string>>> GetTypes() {
-        //TODO: Implement this method in the repository
-        return Ok();
+        var spec = new TypeListSpecification();
+        return Ok(await repo.ListAsync(spec));
     }
 
     private bool ProductExists(int id) {
