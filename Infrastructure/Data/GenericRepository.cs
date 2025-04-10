@@ -1,4 +1,3 @@
-using System;
 using Core.Entities;
 using Core.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +9,13 @@ public class GenericRepository<T>(StoreContext context) : IGenericRepository<T> 
     public void Add(T entity)
     {
         context.Set<T>().Add(entity);
+    }
+
+    public async Task<int> CountAsync(ISpecification<T> spec)
+    {
+        var query = context.Set<T>().AsQueryable();
+        query = spec.ApplyCriteria(query); 
+        return await query.CountAsync();
     }
 
     public bool Exists(int id)
