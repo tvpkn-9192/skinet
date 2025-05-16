@@ -8,6 +8,7 @@ import { CartService } from '../../../core/services/cart.service';
 
 @Component({
   selector: 'app-cart-item',
+  standalone: true,
   imports: [
     RouterLink,
     MatButton,
@@ -23,13 +24,13 @@ export class CartItemComponent {
 
   incrementQuantity() {
     this.cartService.addItemToCart(this.item());
-  } 
+  }
 
   decrementQuantity() {
     this.cartService.removeItemFromCart(this.item().productId);
   }
 
   removeItemFromCart() {
-    this.cartService.removeItemFromCart(this.item().productId, this.item().quantity); 
-  }  
+    this.cartService.removeItemFromCart(this.item().productId, this.item().quantity);
+  }
 }
